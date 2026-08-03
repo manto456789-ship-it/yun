@@ -14,33 +14,42 @@ document.querySelector(".schedule-close").onclick=closeSchedule;
 scheduleModal.onclick=e=>{if(e.target===scheduleModal)closeSchedule()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!scheduleModal.classList.contains("hidden"))closeSchedule()});
 const scheduleCourses=document.querySelectorAll(".course-card");
-const subjectTeacherNames={
-  math:["解創智數學","陳建州數學"],
-  english:["Penny 老師"],
-  chinese:["陳怡樺老師","方韻慈老師"],
-  physics:["陸怡中老師"],
-  chemistry:["金刀老師（江青釗）"]
+const courseTeacherMap={
+  "解創智數學":"解創智數學",
+  "陳建州｜進度一":"陳建州數學",
+  "Penny｜雙週解題":"Penny 老師",
+  "怡樺八週班":"陳怡樺老師",
+  "方韻慈":"方韻慈老師",
+  "陸怡中":"陸怡中老師",
+  "金刀（江青釗）":"金刀老師（江青釗）"
 };
-function jumpToFaculty(subject){
+function jumpToTeacher(teacherName){
   closeSchedule();
   window.setTimeout(()=>{
-    const faculty=document.getElementById("faculty");
-    if(!faculty)return;
-    faculty.scrollIntoView({behavior:"smooth",block:"start"});
-    const names=subjectTeacherNames[subject]||[];
-    const cards=[...document.querySelectorAll(".faculty-card")].filter(card=>names.includes(card.querySelector("h3")?.textContent.trim()));
-    document.querySelectorAll(".faculty-card.subject-highlight").forEach(card=>card.classList.remove("subject-highlight"));
+    const cards=[...document.querySelectorAll(".faculty-card")];
+    const card=cards.find(item=>item.querySelector("h3")?.textContent.trim()===teacherName);
+    if(!card)return;
+    document.querySelectorAll(".faculty-card.subject-highlight").forEach(item=>item.classList.remove("subject-highlight"));
+    card.scrollIntoView({behavior:"smooth",block:"center"});
     window.setTimeout(()=>{
-      cards.forEach(card=>card.classList.add("subject-highlight"));
-      if(cards[0])cards[0].focus({preventScroll:true});
-      window.setTimeout(()=>cards.forEach(card=>card.classList.remove("subject-highlight")),2400);
-    },650);
-  },180);
+      card.classList.add("subject-highlight");
+      window.setTimeout(()=>card.classList.remove("subject-highlight"),2200);
+    },520);
+  },160);
 }
 scheduleCourses.forEach(card=>{
-  const go=()=>jumpToFaculty(card.dataset.subject);
+  const courseName=card.querySelector("b")?.textContent.trim()||"";
+  const teacherName=courseTeacherMap[courseName];
+  if(!teacherName){
+    card.classList.add("course-no-profile");
+    card.removeAttribute("tabindex");
+    card.setAttribute("aria-label",`${courseName}，目前沒有師資介紹頁`);
+    return;
+  }
+  card.dataset.teacher=teacherName;
+  const go=()=>jumpToTeacher(teacherName);
   card.onclick=go;
-  card.setAttribute("aria-label",`${card.querySelector("b")?.textContent||"課程"}，查看授課師資`);
+  card.setAttribute("aria-label",`${courseName}，查看 ${teacherName} 師資介紹`);
   card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}};
 });
 const facultyProfileModal=document.getElementById("faculty-profile-modal");

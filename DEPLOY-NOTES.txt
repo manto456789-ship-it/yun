@@ -1,8 +1,10 @@
-Victor Campus V3 integrated release
+Victor Campus V4
 
-- Removed the bottom subject explorer and course-count controls
-- Clicking a schedule course now closes the schedule and jumps to the matching faculty photos
-- Matching faculty cards are highlighted briefly
-- Keeps student/parent/teacher/admin role separation and prior backend demo functions
+更新內容：
+1. 修正課表課程與老師介紹一對一對應。
+2. Gary｜律振揚不會跳轉，沒有介紹頁的洪宇也不會錯誤跳轉。
+3. Penny｜雙週解題只會跳到 Penny 老師。
+4. 師資區改為微科技、高級教育品牌視覺。
+5. 保留紫色首頁、角色權限分流、LINE 與 Google Apps Script。
 
-Production note: this remains a front-end prototype. Real personal data requires a secured backend and database.
+部署：上傳全部檔案到 GitHub main，Vercel 會自動更新。
