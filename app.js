@@ -1,4 +1,4 @@
-const roles=["學生","家長","行政"];
+const roles=["學生","家長","老師","行政"];
 const nav={行政:["營運總覽","行事曆","學生管理","教師管理","課程班級","成績與出席","聯絡簿","系統啟用中心"],老師:["教學總覽","行事曆","我的班級","成績登錄","出席點名","作業管理","聯絡簿","教材中心"],家長:["孩子總覽","行事曆","學習成績","出席紀錄","作業進度","聯絡簿","教材檔案","通知中心"],學生:["我的首頁","行事曆","我的課程","我的成績","作業清單","聯絡簿","補課影片","教材下載"]};
 let role="學生",active="我的首頁";
 const students=[["S001","王得勝","高一","英文、數學","王媽媽","正常"],["S002","林品妤","高一","國文、英文、物理","林先生","正常"],["S003","陳奕安","高一","數學、化學","陳媽媽","待補資料"],["S004","張芯瑜","高一","巔峰班、英文","張先生","正常"]];
@@ -13,26 +13,35 @@ document.querySelectorAll(".schedule-open").forEach(el=>{el.onclick=openSchedule
 document.querySelector(".schedule-close").onclick=closeSchedule;
 scheduleModal.onclick=e=>{if(e.target===scheduleModal)closeSchedule()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!scheduleModal.classList.contains("hidden"))closeSchedule()});
-const filterMeta={all:["全部課程",10],math:["數學課程",4],english:["英文課程",2],chinese:["國文課程",2],physics:["物理課程",1],chemistry:["化學課程",1]};
-const legendState=document.getElementById("legend-state");
-const legendFilters=document.querySelectorAll(".legend-filter");
 const scheduleCourses=document.querySelectorAll(".course-card");
-function filterSchedule(subject){
-  const [label,count]=filterMeta[subject];
-  legendState.textContent=label+"｜"+count+" 堂";
-  legendFilters.forEach(button=>button.classList.toggle("selected",button.dataset.filter===subject));
-  scheduleCourses.forEach(card=>{
-    const match=subject==="all"||card.dataset.subject===subject;
-    card.classList.toggle("course-muted",!match);
-    card.classList.toggle("course-focus",match&&subject!=="all");
-    card.classList.remove("course-picked");
-  });
+const subjectTeacherNames={
+  math:["解創智數學","陳建州數學"],
+  english:["Penny 老師"],
+  chinese:["陳怡樺老師","方韻慈老師"],
+  physics:["陸怡中老師"],
+  chemistry:["金刀老師（江青釗）"]
+};
+function jumpToFaculty(subject){
+  closeSchedule();
+  window.setTimeout(()=>{
+    const faculty=document.getElementById("faculty");
+    if(!faculty)return;
+    faculty.scrollIntoView({behavior:"smooth",block:"start"});
+    const names=subjectTeacherNames[subject]||[];
+    const cards=[...document.querySelectorAll(".faculty-card")].filter(card=>names.includes(card.querySelector("h3")?.textContent.trim()));
+    document.querySelectorAll(".faculty-card.subject-highlight").forEach(card=>card.classList.remove("subject-highlight"));
+    window.setTimeout(()=>{
+      cards.forEach(card=>card.classList.add("subject-highlight"));
+      if(cards[0])cards[0].focus({preventScroll:true});
+      window.setTimeout(()=>cards.forEach(card=>card.classList.remove("subject-highlight")),2400);
+    },650);
+  },180);
 }
-legendFilters.forEach(button=>button.onclick=()=>filterSchedule(button.dataset.filter));
 scheduleCourses.forEach(card=>{
-  const pick=()=>{if(card.classList.contains("course-muted"))return;scheduleCourses.forEach(x=>{if(x!==card)x.classList.remove("course-picked")});card.classList.toggle("course-picked")};
-  card.onclick=pick;
-  card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick()}};
+  const go=()=>jumpToFaculty(card.dataset.subject);
+  card.onclick=go;
+  card.setAttribute("aria-label",`${card.querySelector("b")?.textContent||"課程"}，查看授課師資`);
+  card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}};
 });
 const facultyProfileModal=document.getElementById("faculty-profile-modal");
 const facultyGrid=document.querySelector(".teachers");
@@ -123,44 +132,35 @@ const campusLoginError=document.getElementById("login-error");
 const campusLoginRule=document.getElementById("login-rule");
 function updateCampusLoginFields(){
   const studentFamily=role==="學生"||role==="家長";
-  campusAccount.placeholder=studentFamily?"請輸入學生學號":"請輸入行政帳號";
+  const teacher=role==="老師";
+  campusAccount.placeholder=studentFamily?"請輸入學生學號":teacher?"請輸入老師帳號":"請輸入行政帳號";
   campusAccount.inputMode=studentFamily?"numeric":"text";
-  campusPassword.placeholder=studentFamily?"民國生日年月日 6 碼":"請輸入管理密碼";
+  campusPassword.placeholder=studentFamily?"民國生日年月日 6 碼":teacher?"請輸入老師密碼":"請輸入行政密碼";
   campusPassword.inputMode=studentFamily?"numeric":"text";
   campusPassword.maxLength=studentFamily?6:64;
   campusLoginRule.lastChild.textContent=studentFamily
     ?"學生與家長：帳號為學號，密碼為民國生日 6 碼；100 年請輸入 00"
-    :"行政帳號需使用管理端核發的帳號與密碼";
+    :teacher?"老師請使用核發的老師帳號與密碼":"行政請使用核發的行政帳號與密碼";
   campusLoginError.textContent="";
 }
 document.querySelectorAll(".portal-open").forEach(b=>b.onclick=()=>{updateCampusLoginFields();show("login")});document.querySelector(".modal-close").onclick=()=>hide("login");
 document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>{role=b.dataset.role;document.querySelectorAll("[data-role]").forEach(x=>x.classList.toggle("selected",x===b));updateCampusLoginFields()});
 document.querySelector(".login-box").onsubmit=e=>{
   e.preventDefault();
+  const account=campusAccount.value.trim();
+  const password=campusPassword.value.trim();
   if(role==="學生"||role==="家長"){
-    const account=campusAccount.value.trim();
-    const birthday=campusPassword.value.trim();
-    if(!/^\d+$/.test(account)){
-      campusLoginError.textContent="請輸入正確的學生學號";
-      campusAccount.focus();
-      return;
-    }
-    if(!/^\d{6}$/.test(birthday)){
-      campusLoginError.textContent="密碼請輸入民國生日年月日 6 碼，例如 99/10/25 請輸入 991025";
-      campusPassword.focus();
-      return;
-    }
-    const portalRole=role==="學生"?"student":"parent";
-    window.sessionStorage.setItem("victorCampusRole",portalRole);
-    window.sessionStorage.setItem("victorCampusStudentId",account);
-    window.location.href=`portal.html?role=${portalRole}`;
-    return;
+    if(!/^\d+$/.test(account)){campusLoginError.textContent="請輸入正確的學生學號";campusAccount.focus();return}
+    if(!/^\d{6}$/.test(password)){campusLoginError.textContent="密碼請輸入民國生日年月日 6 碼，例如 99/10/25 請輸入 991025";campusPassword.focus();return}
+  }else if(role==="老師"){
+    if(!(account==="teacher"&&password==="T2026")){campusLoginError.textContent="老師帳號或密碼不正確";return}
+  }else if(role==="行政"){
+    if(!(account==="admin"&&password==="A2026")){campusLoginError.textContent="行政帳號或密碼不正確";return}
   }
-  active=nav[role][0];
-  hide("login");
-  hide("official");
-  show("portal");
-  renderPortal();
+  const portalRole={學生:"student",家長:"parent",老師:"teacher",行政:"admin"}[role];
+  const auth={role:portalRole,account,studentId:(portalRole==="student"||portalRole==="parent")?account:null,issuedAt:Date.now()};
+  window.sessionStorage.setItem("victorCampusAuth",JSON.stringify(auth));
+  window.location.href=`portal.html?role=${portalRole}`;
 };
 document.getElementById("back-site").onclick=()=>{hide("portal");show("official");window.scrollTo({top:0,behavior:"smooth"})};
 const inquiryEndpoint="https://script.google.com/macros/s/AKfycbx5gqERJdjXqOeRl8zXCW94_QcuturvPYBYWYFeGofwwLPHmdcY7LE71VYDVQbHBLnK/exec";

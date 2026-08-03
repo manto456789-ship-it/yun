@@ -1,0 +1,8 @@
+Victor Campus V3 integrated release
+
+- Removed the bottom subject explorer and course-count controls
+- Clicking a schedule course now closes the schedule and jumps to the matching faculty photos
+- Matching faculty cards are highlighted briefly
+- Keeps student/parent/teacher/admin role separation and prior backend demo functions
+
+Production note: this remains a front-end prototype. Real personal data requires a secured backend and database.
