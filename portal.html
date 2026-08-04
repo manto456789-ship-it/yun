@@ -281,8 +281,27 @@ document.querySelectorAll('[data-login]').forEach(b=>b.onclick=()=>{document.que
 const API_ENDPOINT='/api/proxy';
 const roleMap={學生:'student',家長:'parent',老師:'teacher',行政:'admin'};
 async function apiPost(payload){const response=await fetch(API_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await response.json();if(!response.ok||!data.success)throw new Error(data.message||'系統連線失敗');return data}
-async function apiList(sheet){const response=await fetch(`${API_ENDPOINT}?action=list&sheet=${encodeURIComponent(sheet)}`,{cache:'no-store'});const data=await response.json();if(!response.ok||!data.success)throw new Error(data.message||'資料讀取失敗');return data.data||[]}
-const TEST_USERS={student:{account:'student',password:'123456',name:'王小明',relatedId:'S001'},parent:{account:'parent',password:'123456',name:'王小明家長',relatedId:'S001'},teacher:{account:'teacher',password:'123456',name:'測試老師',relatedId:'T001'},admin:{account:'admin',password:'123456',name:'行政人員',relatedId:'ADMIN001'}};
+async function apiList(sheet) {
+  const url =
+    `${API_ENDPOINT}?action=list&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error(`資料庫連線失敗：HTTP ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "讀取資料失敗");
+  }
+
+  return result;
+}const TEST_USERS={student:{account:'student',password:'123456',name:'王小明',relatedId:'S001'},parent:{account:'parent',password:'123456',name:'王小明家長',relatedId:'S001'},teacher:{account:'teacher',password:'123456',name:'測試老師',relatedId:'T001'},admin:{account:'admin',password:'123456',name:'行政人員',relatedId:'ADMIN001'}};
 loginBtn.onclick=async()=>{const account=portalAccount.value.trim(),password=portalPassword.value.trim();portalLoginError.textContent='';if(!account||!password){portalLoginError.textContent='請輸入帳號與密碼';return}loginBtn.disabled=true;loginBtn.textContent='登入中…';try{const testUser=TEST_USERS[loginRole];if(!testUser||account!==testUser.account||password!==testUser.password)throw new Error('測試帳號或密碼不正確');const auth={role:loginRole,account,name:testUser.name,relatedId:testUser.relatedId,studentId:(loginRole==='student'||loginRole==='parent')?testUser.relatedId:null,issuedAt:Date.now(),testMode:true};sessionStorage.setItem('victorCampusAuth',JSON.stringify(auth));enterPortal(auth);await loadRoleData(auth)}catch(error){portalLoginError.textContent=error.message||'登入失敗'}finally{loginBtn.disabled=false;loginBtn.textContent='登入'}};
 logout.onclick=()=>{sessionStorage.removeItem('victorCampusAuth');location.href='index.html'};
 function enterPortal(auth){if(!auth||!cfg[auth.role])return;role=auth.role;login.classList.add('hidden');app.classList.remove('hidden');pname.textContent=auth.name||cfg[role].p[0];pmeta.textContent=auth.studentId?(role==='parent'?`綁定學號：${auth.studentId}`:`學號 ${auth.studentId}｜高一學生`):cfg[role].p[1];nav.innerHTML='';cfg[role].n.forEach((x,i)=>{const b=document.createElement('button');b.textContent=x[0];b.dataset.target=x[1];b.onclick=()=>show(x[1]);if(i===0)b.classList.add('active');nav.appendChild(b)});show(cfg[role].n[0][1])}
