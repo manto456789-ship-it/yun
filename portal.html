@@ -300,7 +300,7 @@ async function apiList(sheet) {
     throw new Error(result.message || "讀取資料失敗");
   }
 
-  return result;
+ return Array.isArray(result.data) ? result.data : [];
 }const TEST_USERS={student:{account:'student',password:'123456',name:'王小明',relatedId:'S001'},parent:{account:'parent',password:'123456',name:'王小明家長',relatedId:'S001'},teacher:{account:'teacher',password:'123456',name:'測試老師',relatedId:'T001'},admin:{account:'admin',password:'123456',name:'行政人員',relatedId:'ADMIN001'}};
 loginBtn.onclick=async()=>{const account=portalAccount.value.trim(),password=portalPassword.value.trim();portalLoginError.textContent='';if(!account||!password){portalLoginError.textContent='請輸入帳號與密碼';return}loginBtn.disabled=true;loginBtn.textContent='登入中…';try{const testUser=TEST_USERS[loginRole];if(!testUser||account!==testUser.account||password!==testUser.password)throw new Error('測試帳號或密碼不正確');const auth={role:loginRole,account,name:testUser.name,relatedId:testUser.relatedId,studentId:(loginRole==='student'||loginRole==='parent')?testUser.relatedId:null,issuedAt:Date.now(),testMode:true};sessionStorage.setItem('victorCampusAuth',JSON.stringify(auth));enterPortal(auth);await loadRoleData(auth)}catch(error){portalLoginError.textContent=error.message||'登入失敗'}finally{loginBtn.disabled=false;loginBtn.textContent='登入'}};
 logout.onclick=()=>{sessionStorage.removeItem('victorCampusAuth');location.href='index.html'};
