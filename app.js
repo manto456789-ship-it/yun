@@ -162,9 +162,9 @@ document.querySelector(".login-box").onsubmit=e=>{
     if(!/^\d+$/.test(account)){campusLoginError.textContent="請輸入正確的學生學號";campusAccount.focus();return}
     if(!/^\d{6}$/.test(password)){campusLoginError.textContent="密碼請輸入民國生日年月日 6 碼，例如 99/10/25 請輸入 991025";campusPassword.focus();return}
   }else if(role==="老師"){
-    if(!(account==="teacher"&&password==="T2026")){campusLoginError.textContent="老師帳號或密碼不正確";return}
+    if(!(account==="teacher"&&password==="123456")){campusLoginError.textContent="老師帳號或密碼不正確";return}
   }else if(role==="行政"){
-    if(!(account==="admin"&&password==="A2026")){campusLoginError.textContent="行政帳號或密碼不正確";return}
+    if(!(account==="admin"&&password==="123456")){campusLoginError.textContent="行政帳號或密碼不正確";return}
   }
   const portalRole={學生:"student",家長:"parent",老師:"teacher",行政:"admin"}[role];
   const auth={role:portalRole,account,studentId:(portalRole==="student"||portalRole==="parent")?account:null,issuedAt:Date.now()};

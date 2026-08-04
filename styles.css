@@ -550,3 +550,476 @@ footer{background:#24143b}
 
 @media(max-width:1100px){.other-subjects-grid{grid-template-columns:1fr!important}.subject-card-grid{grid-template-columns:repeat(var(--teacher-count,1),minmax(0,1fr))!important}.featured-math-grid{grid-template-columns:1fr!important}}
 @media(max-width:700px){.faculty-zone-head{grid-template-columns:1fr!important}.faculty-zone-head>span{grid-row:auto!important;width:max-content!important;height:auto!important;min-width:0!important;padding:7px 10px!important;margin-bottom:10px!important}.subject-card-grid{grid-template-columns:1fr!important}.teachers article.faculty-card,.featured-math-grid .faculty-card,.other-subjects-grid .faculty-card{display:block!important;min-height:0!important}.teachers article.faculty-card>.teacher-photo,.featured-math-grid .faculty-card>.teacher-photo,.other-subjects-grid .faculty-card>.teacher-photo{height:270px!important;min-height:270px!important;margin:0 0 18px!important}.teachers article.faculty-card>span:not(.faculty-view),.teachers article.faculty-card h3,.teachers article.faculty-card p,.teachers article.faculty-card .faculty-view{margin-left:7px!important;margin-right:7px!important}.faculty-zone+.faculty-zone{margin-top:54px!important}}
+/* =========================================================
+   Faculty layout repair — keep all copy unchanged
+   ========================================================= */
+
+/* Make every faculty card stretch evenly inside its row */
+.faculty-groups,
+.featured-math-grid,
+.other-subjects-grid,
+.subject-card-grid {
+  align-items: stretch !important;
+}
+
+.subject-block {
+  height: 100% !important;
+}
+
+.subject-card-grid {
+  height: 100% !important;
+}
+
+/* Base card: fixed structure and no giant empty space */
+.teachers article.faculty-card,
+.featured-math-grid .faculty-card,
+.other-subjects-grid .faculty-card,
+.subject-card-grid .faculty-card {
+  box-sizing: border-box !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 0 20px !important;
+  overflow: hidden !important;
+}
+
+/* All normal subject portrait frames use exactly the same height */
+.other-subjects-grid .faculty-card > .teacher-photo,
+.subject-card-grid .faculty-card > .teacher-photo {
+  box-sizing: border-box !important;
+  flex: 0 0 260px !important;
+  width: 100% !important;
+  height: 260px !important;
+  min-height: 260px !important;
+  max-height: 260px !important;
+  margin: 0 0 18px !important;
+  padding: 10px 10px 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Same image fitting rule for every teacher */
+.other-subjects-grid .teacher-photo img,
+.subject-card-grid .teacher-photo img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  transform-origin: center bottom !important;
+}
+
+/* Only balance subject scale; never stretch the original */
+.other-subjects-grid img[alt="Penny 老師"] {
+  transform: scale(1.02) translateY(2px) !important;
+}
+.other-subjects-grid img[alt="陳怡樺老師"] {
+  transform: scale(1.00) translateY(2px) !important;
+}
+.other-subjects-grid img[alt="方韻慈老師"] {
+  transform: scale(1.00) translateY(2px) !important;
+}
+.other-subjects-grid img[alt="陸怡中老師"] {
+  transform: scale(1.00) translateY(2px) !important;
+}
+.other-subjects-grid img[alt="金刀老師（江青釗）"] {
+  transform: scale(.88) translateY(7px) !important;
+}
+
+/* Keep all names and copy untouched, but align the content area */
+.other-subjects-grid .faculty-card > span:not(.faculty-view),
+.subject-card-grid .faculty-card > span:not(.faculty-view) {
+  margin-left: 18px !important;
+  margin-right: 18px !important;
+}
+
+.other-subjects-grid .faculty-card h3,
+.subject-card-grid .faculty-card h3 {
+  margin-left: 18px !important;
+  margin-right: 18px !important;
+}
+
+.other-subjects-grid .faculty-card p,
+.subject-card-grid .faculty-card p {
+  min-height: 38px !important;
+  margin-left: 18px !important;
+  margin-right: 18px !important;
+}
+
+/* Push the profile link to the same baseline */
+.other-subjects-grid .faculty-view,
+.subject-card-grid .faculty-view {
+  margin: auto 18px 0 !important;
+  padding-top: 15px !important;
+}
+
+/* Mathematics remains two large cards, both exactly equal */
+.featured-math-grid {
+  align-items: stretch !important;
+}
+
+.featured-math-grid .faculty-card {
+  min-height: 390px !important;
+  display: grid !important;
+  grid-template-columns: minmax(250px, 1.08fr) minmax(190px, .92fr) !important;
+  grid-template-rows: auto auto 1fr auto !important;
+  column-gap: 20px !important;
+  padding: 14px !important;
+}
+
+.featured-math-grid .faculty-card > .teacher-photo {
+  box-sizing: border-box !important;
+  grid-column: 1 !important;
+  grid-row: 1 / 5 !important;
+  width: 100% !important;
+  height: 360px !important;
+  min-height: 360px !important;
+  max-height: 360px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.featured-math-grid .faculty-card > .teacher-photo img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+}
+
+.featured-math-grid .faculty-card > span:not(.faculty-view),
+.featured-math-grid .faculty-card h3,
+.featured-math-grid .faculty-card p,
+.featured-math-grid .faculty-view {
+  grid-column: 2 !important;
+}
+
+/* Desktop: make English / Chinese / Science columns visually equal */
+@media (min-width: 1101px) {
+  .other-subjects-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .subject-block {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .subject-block .subject-card-grid {
+    flex: 1 !important;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+  .other-subjects-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .subject-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .featured-math-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .subject-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .other-subjects-grid .faculty-card > .teacher-photo,
+  .subject-card-grid .faculty-card > .teacher-photo {
+    flex-basis: 310px !important;
+    height: 310px !important;
+    min-height: 310px !important;
+    max-height: 310px !important;
+  }
+
+  .featured-math-grid .faculty-card {
+    display: flex !important;
+    min-height: 0 !important;
+    padding: 0 0 20px !important;
+  }
+
+  .featured-math-grid .faculty-card > .teacher-photo {
+    width: 100% !important;
+    height: 320px !important;
+    min-height: 320px !important;
+    max-height: 320px !important;
+    margin: 0 0 18px !important;
+    border-radius: 0 !important;
+  }
+
+  .featured-math-grid .faculty-card > span:not(.faculty-view),
+  .featured-math-grid .faculty-card h3,
+  .featured-math-grid .faculty-card p {
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+  }
+
+  .featured-math-grid .faculty-view {
+    margin: auto 18px 0 !important;
+  }
+}
+/* 最終師資照片框修正：文案不變 */
+.other-subjects-grid {
+  align-items: stretch !important;
+}
+
+.subject-block {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.subject-card-grid {
+  flex: 1 !important;
+  align-items: stretch !important;
+}
+
+/* 一般科目卡片全部等高 */
+.other-subjects-grid .faculty-card,
+.subject-card-grid .faculty-card {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 0 0 20px !important;
+}
+
+/* 英文、國文、自然照片框完全同高 */
+.other-subjects-grid .faculty-card > .teacher-photo,
+.subject-card-grid .faculty-card > .teacher-photo {
+  flex: 0 0 260px !important;
+  width: 100% !important;
+  height: 260px !important;
+  min-height: 260px !important;
+  max-height: 260px !important;
+  margin: 0 0 18px !important;
+  padding: 10px 10px 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 照片不拉長、不壓扁 */
+.other-subjects-grid .teacher-photo img,
+.subject-card-grid .teacher-photo img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+}
+
+/* 全身照縮小一點，避免人物過高 */
+.other-subjects-grid img[alt="金刀老師（江青釗）"] {
+  transform: scale(.88) translateY(7px) !important;
+}
+
+/* 介紹按鈕全部排在同一底線 */
+.other-subjects-grid .faculty-view,
+.subject-card-grid .faculty-view {
+  margin-top: auto !important;
+}
+
+/* 數學兩張大型卡片彼此完全同高 */
+.featured-math-grid {
+  align-items: stretch !important;
+}
+
+.featured-math-grid .faculty-card {
+  height: 100% !important;
+  min-height: 390px !important;
+}
+
+.featured-math-grid .faculty-card > .teacher-photo {
+  height: 360px !important;
+  min-height: 360px !important;
+  max-height: 360px !important;
+}
+
+/* 手機版 */
+@media (max-width: 700px) {
+  .other-subjects-grid .faculty-card > .teacher-photo,
+  .subject-card-grid .faculty-card > .teacher-photo {
+    flex-basis: 310px !important;
+    height: 310px !important;
+    min-height: 310px !important;
+    max-height: 310px !important;
+  }
+
+  .featured-math-grid .faculty-card > .teacher-photo {
+    height: 320px !important;
+    min-height: 320px !important;
+    max-height: 320px !important;
+  }
+}/* ===== Victor Campus Premium Faculty ===== */
+
+.cards.teachers{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:28px;
+    align-items:stretch;
+}
+
+.cards.teachers article{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-height:560px;
+    border-radius:26px;
+    overflow:hidden;
+    background:#fff;
+    transition:.35s;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.cards.teachers article:hover{
+    transform:translateY(-10px);
+    box-shadow:0 24px 60px rgba(126,61,181,.25);
+}
+
+.teacher-photo{
+    width:100%;
+    height:340px;
+    overflow:hidden;
+    background:#f5f1fa;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+}
+
+.teacher-photo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center bottom;
+}
+
+.cards.teachers article h3{
+    margin:24px 24px 10px;
+    font-size:30px;
+}
+
+.cards.teachers article p{
+    margin:0 24px;
+    line-height:1.8;
+}
+
+.faculty-view{
+    margin-top:auto;
+    margin-left:24px;
+    margin-right:24px;
+    margin-bottom:24px;
+}/* ===== Faculty Typography ===== */
+
+.cards.teachers article h3{
+    font-size:18px !important;
+    line-height:1.3;
+    margin:18px 20px 8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.cards.teachers article p{
+    font-size:14px !important;
+    line-height:1.8;
+    margin:0 20px;
+    color:#666;
+}
+
+.faculty-view{
+    margin:18px 20px 20px;
+}/* ===== Faculty final proportion repair ===== */
+
+/* 三個科目區改成上下排列，不再硬塞同一排 */
+.other-subjects-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:24px !important;
+}
+
+/* 每一科維持自己的區塊 */
+.subject-block{
+  width:100% !important;
+  height:auto !important;
+}
+
+/* 英文一張卡不要撐滿過寬 */
+.subject-block[data-subject="english"] .subject-card-grid{
+  grid-template-columns:minmax(0,520px) !important;
+  justify-content:center !important;
+}
+
+/* 國文、自然各兩張，卡片有正常寬度 */
+.subject-block[data-subject="chinese"] .subject-card-grid,
+.subject-block[data-subject="science"] .subject-card-grid{
+  grid-template-columns:repeat(2,minmax(280px,1fr)) !important;
+  gap:20px !important;
+}
+
+/* 取消過高卡片 */
+.other-subjects-grid .faculty-card,
+.subject-card-grid .faculty-card{
+  min-height:0 !important;
+  height:auto !important;
+}
+
+/* 照片框統一 */
+.other-subjects-grid .faculty-card > .teacher-photo,
+.subject-card-grid .faculty-card > .teacher-photo{
+  flex:0 0 300px !important;
+  height:300px !important;
+  min-height:300px !important;
+  max-height:300px !important;
+}
+
+/* 文字區不要留下過多空白 */
+.other-subjects-grid .faculty-card p,
+.subject-card-grid .faculty-card p{
+  min-height:0 !important;
+  margin-bottom:18px !important;
+}
+
+/* 查看介紹放在內容下方，不再硬推到底 */
+.other-subjects-grid .faculty-view,
+.subject-card-grid .faculty-view{
+  margin-top:0 !important;
+}
+
+/* 名字可以完整顯示，不用省略號 */
+.cards.teachers article h3{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  font-size:20px !important;
+}
+
+/* 桌機整體寬度 */
+.teachers.faculty-groups{
+  max-width:1120px !important;
+}
+
+/* 手機版 */
+@media(max-width:700px){
+  .subject-block[data-subject="english"] .subject-card-grid,
+  .subject-block[data-subject="chinese"] .subject-card-grid,
+  .subject-block[data-subject="science"] .subject-card-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  .other-subjects-grid .faculty-card > .teacher-photo,
+  .subject-card-grid .faculty-card > .teacher-photo{
+    height:320px !important;
+    min-height:320px !important;
+    max-height:320px !important;
+  }
+}
